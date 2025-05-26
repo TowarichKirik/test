@@ -24,3 +24,4 @@ AdInfo TEXT
 )
 """)
 
+print("hello")

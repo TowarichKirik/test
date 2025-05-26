@@ -47,7 +47,7 @@ def Operations(num):
                 print("Ваш пароль должен содержать не менее 1 цифры")
                 password = input("Ваш пароль: ")
         cursor.execute(f"""INSERT INTO users (name, login, password, Account) VALUES ('{name}', '{login}', '{password}', 1000);""")
-        conn.commit()
+        conn.commit()#
 
     if num == 1:
         createAccount()

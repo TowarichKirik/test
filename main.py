@@ -5,7 +5,6 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS users(
 id INT PRIMARY KEY AUTOINCREMENT,
 name TEXT,
 login TEXT,
-password TEXT
-""")
-cursor.execute("""
+password TEXT,
+Account REAL)
 """)

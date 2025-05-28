@@ -33,6 +33,8 @@ AdInfo TEXT
 
 # Операции
 def Operations(num):
+    loggedAs = ""
+
     def checkPasswordStrength(password):
         if len(password) < 8:
             print("Ваш пароль меньше 8 символов!")
@@ -77,6 +79,7 @@ def Operations(num):
                 password = input("Ваш пароль: ")
         cursor.execute(f"""INSERT INTO users (name, login, password, Account) VALUES ('{name}', '{login}', '{password}', 1000);""")
         conn.commit()#
+        log_in_account(login, password)
 
     #Перевод средств
     def send_money(idSender, idReciever, amount):
@@ -85,9 +88,10 @@ def Operations(num):
         conn.commit()
 
     #Логин в аккаунт
-    def log_in_account():
-        login = input("Введите ваш логин: ")
-        password = input("Введите ваш пароль: ")
+    def log_in_account(login="0", password="0"):
+        if login == "0":
+            login = input("Введите ваш логин: ")
+            password = input("Введите ваш пароль: ")
         isRealLogin = False
         isPasswordCorrect = False
         if checkLogin(login):
@@ -96,8 +100,10 @@ def Operations(num):
             isPasswordCorrect = True
         if isRealLogin and isPasswordCorrect:
             print("Добро пожаловать!")
+            loggedAs = login
         else:
             print("Неверный логин или пароль!")
+
 
 
 
@@ -105,4 +111,4 @@ def Operations(num):
         createAccount()
     if num == 2:
         log_in_account()
-Operations(2)
+Operations(1)

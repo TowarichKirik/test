@@ -32,10 +32,19 @@ def Operations(num):
             print("Ваш пароль меньше 8 символов!")
             return True
         return False
+    def checkLogin(login):
+        cursor.execute("SELECT * FROM users")
+        for logins in cursor.fetchall():
+            if login == logins[2]:
+                return True
+        return False
     #Создание аккаунта
     def createAccount():
         name = input("Ваше ФИО: ")
         login = input("Ваш логин: ")
+        while checkLogin(login):
+            print(f"Ваш логин {login} совпадает с логином другого пользователя!")
+            login = input("Ваш логин: ")
 
         password = input("Ваш пароль: ")
         while checkPassword(password):
@@ -52,4 +61,3 @@ def Operations(num):
     if num == 1:
         createAccount()
 Operations(1)
-#а?

@@ -5,6 +5,12 @@ conn = sqlite3.connect("database.db")
 cursor = conn.cursor()
 
 
+"""МОЖНО УЛУЧШИТЬ: 
+Убрать айди, заменив его логином.
+Логин так или иначе все равно уникален, как и айди
+Зачем тогда айди, который нигде не нужен, если есть логин?"""
+
+
 cursor.execute("""CREATE TABLE IF NOT EXISTS users(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT,
@@ -27,12 +33,11 @@ AdInfo TEXT
 
 # Операции
 def Operations(num):
-    def checkPassword(password):
+    def checkPasswordStrength(password):
         if len(password) < 8:
             print("Ваш пароль меньше 8 символов!")
             return True
         return False
-
 
     def checkLogin(login):
         cursor.execute("SELECT * FROM users")
@@ -40,6 +45,18 @@ def Operations(num):
             if login == table[2]:
                 return True
         return False
+
+    def checkPasswordCorrectness(login, password):
+        try:
+            cursor.execute(f'SELECT password FROM users WHERE login="{login}"')
+            user_password = cursor.fetchone()
+            if password == user_password[0]:
+                return True
+            return False
+        except Exception as e:
+            print("Эксепшн: ", e)
+            pass
+
 
 
     #Создание аккаунта
@@ -50,7 +67,7 @@ def Operations(num):
             print(f"Ваш логин {login} совпадает с логином другого пользователя!")
             login = input("Ваш логин: ")
         password = input("Ваш пароль: ")
-        while checkPassword(password):
+        while checkPasswordStrength(password):
             password = input("Введите пароль повторно: ")
         if len(password) < 8:
             print("Ваш пароль меньше 8 символов!")
@@ -67,8 +84,25 @@ def Operations(num):
         cursor.execute(f"UPDATE users SET Account = Account + {amount} WHERE id = {idReciever}")
         conn.commit()
 
+    #Логин в аккаунт
+    def log_in_account():
+        login = input("Введите ваш логин: ")
+        password = input("Введите ваш пароль: ")
+        isRealLogin = False
+        isPasswordCorrect = False
+        if checkLogin(login):
+            isRealLogin = True
+        if checkPasswordCorrectness(login, password):
+            isPasswordCorrect = True
+        if isRealLogin and isPasswordCorrect:
+            print("Добро пожаловать!")
+        else:
+            print("Неверный логин или пароль!")
+
+
+
     if num == 1:
         createAccount()
     if num == 2:
-        send_money(7, 8, 500)
+        log_in_account()
 Operations(2)

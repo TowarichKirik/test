@@ -32,12 +32,16 @@ def Operations(num):
             print("Ваш пароль меньше 8 символов!")
             return True
         return False
+
+
     def checkLogin(login):
         cursor.execute("SELECT * FROM users")
-        for logins in cursor.fetchall():
-            if login == logins[2]:
+        for table in cursor.fetchall():
+            if login == table[2]:
                 return True
         return False
+
+
     #Создание аккаунта
     def createAccount():
         name = input("Ваше ФИО: ")
@@ -45,7 +49,6 @@ def Operations(num):
         while checkLogin(login):
             print(f"Ваш логин {login} совпадает с логином другого пользователя!")
             login = input("Ваш логин: ")
-
         password = input("Ваш пароль: ")
         while checkPassword(password):
             password = input("Введите пароль повторно: ")
@@ -58,6 +61,14 @@ def Operations(num):
         cursor.execute(f"""INSERT INTO users (name, login, password, Account) VALUES ('{name}', '{login}', '{password}', 1000);""")
         conn.commit()#
 
+    #Перевод средств
+    def send_money(idSender, idReciever, amount):
+        cursor.execute(f"UPDATE users SET Account = Account - {amount} WHERE id = {idSender}")
+        cursor.execute(f"UPDATE users SET Account = Account + {amount} WHERE id = {idReciever}")
+        conn.commit()
+
     if num == 1:
         createAccount()
-Operations(1)
+    if num == 2:
+        send_money(7, 8, 500)
+Operations(2)

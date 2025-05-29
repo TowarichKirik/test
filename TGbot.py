@@ -2,7 +2,7 @@ import telebot
 from dotenv import load_dotenv
 from telebot import types
 import os
-import main
+import backend
 
 load_dotenv()
 bot = telebot.TeleBot(os.getenv('BOT_TOKEN')) # токен
@@ -28,7 +28,7 @@ def callback_register(call):
         bot.send_message(call.message.chat.id, '<b>Fake Bank</b>\n\n📝 Вход:\n\nВведите ваш <b>Логин</b> и <b>Пароль</b> в <b>разных</b> сообщениях', parse_mode='html')
 login = None
 password = None
-cur = main.cursor
+cur = backend.cursor
 def user_login_reg(message):
     global login
     login = message.text.strip() # deleting spacing

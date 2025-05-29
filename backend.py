@@ -12,8 +12,6 @@ cursor = conn.cursor()
 
 
 cursor.execute("""CREATE TABLE IF NOT EXISTS users(
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-name TEXT,
 login TEXT,
 password TEXT,
 Account REAL
@@ -23,12 +21,13 @@ Account REAL
 
 cursor.execute("""CREATE TABLE IF NOT EXISTS credit(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-userId INT,
+userLogin TEXT,
 Amount REAL,
 PPY REAL,
 AdInfo TEXT
 )
 """)
+#PPY - percent per year, AdInfo - Additional information
 
 
 # Операции
@@ -44,7 +43,7 @@ def Operations(num):
     def checkLogin(login):
         cursor.execute("SELECT * FROM users")
         for table in cursor.fetchall():
-            if login == table[2]:
+            if login == table[0]:
                 return True
         return False
 
@@ -63,7 +62,6 @@ def Operations(num):
 
     #Создание аккаунта
     def createAccount():
-        name = input("Ваше ФИО: ")
         login = input("Ваш логин: ")
         while checkLogin(login):
             print(f"Ваш логин {login} совпадает с логином другого пользователя!")
@@ -77,14 +75,14 @@ def Operations(num):
             if '0123456789' not in password:
                 print("Ваш пароль должен содержать не менее 1 цифры")
                 password = input("Ваш пароль: ")
-        cursor.execute(f"""INSERT INTO users (name, login, password, Account) VALUES ('{name}', '{login}', '{password}', 1000);""")
+        cursor.execute(f"""INSERT INTO users (login, password, Account) VALUES ('{login}', '{password}', 1000);""")
         conn.commit()#
         log_in_account(login, password)
 
     #Перевод средств
-    def send_money(idSender, idReciever, amount):
-        cursor.execute(f"UPDATE users SET Account = Account - {amount} WHERE id = {idSender}")
-        cursor.execute(f"UPDATE users SET Account = Account + {amount} WHERE id = {idReciever}")
+    def send_money(loginSender, loginReciever, amount):
+        cursor.execute(f"UPDATE users SET Account = Account - {amount} WHERE login = {loginSender}")
+        cursor.execute(f"UPDATE users SET Account = Account + {amount} WHERE login = {loginReciever}")
         conn.commit()
 
     #Логин в аккаунт

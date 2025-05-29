@@ -111,14 +111,27 @@ def Operations(num, loggedAs=""):
         else:
             print("Неверный логин или пароль!")
 
+    def logout():
+        nonlocal loggedAs
+        a = int(input("""Вы точно хотите выйти из аккаунта?
+        1 - Да
+        2 - Нет
+        Выбор: """))
+        if a == 1:
+            loggedAs = ""
+        else:
+            print("Остановка операции")
     if num == 1:
         createAccount()
     if num == 2:
         log_in_account()
     if num == 3:
         send_money(loggedAs)
+    if num == 4:
+        logout()
 
     return loggedAs
+
 
 
 def chooseOperation():
@@ -129,13 +142,13 @@ def chooseOperation():
 1 - Создание аккаунта
 2 - Вход в аккаунт
 3 - Перевод денег
-4 - Выход
+4 - Выход из аккаунта
 Ваш выбор: """))
 
-        if a == 4:
+        if a == 5:
             print("Выход из программы")
             break
-        if a in (1, 2, 3):
+        if a in (1, 2, 3, 4):
             loggedAs = Operations(a, loggedAs)
         else:
             print("Неверный выбор, попробуйте снова")

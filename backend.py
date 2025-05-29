@@ -19,15 +19,7 @@ Account REAL
 """)
 
 
-cursor.execute("""CREATE TABLE IF NOT EXISTS credit(
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-userLogin TEXT,
-Amount REAL,
-PPY REAL,
-AdInfo TEXT
-)
-""")
-#PPY - percent per year, AdInfo - Additional information
+
 
 
 # Операции

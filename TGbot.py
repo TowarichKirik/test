@@ -26,18 +26,30 @@ def callback_register(call):
         bot.register_next_step_handler(call.message, user_login_reg)
     elif call.data == 'login':
         bot.send_message(call.message.chat.id, '<b>Fake Bank</b>\n\n📝 Вход:\n\nВведите ваш <b>Логин</b> и <b>Пароль</b> в <b>разных</b> сообщениях', parse_mode='html')
+
 login = None
 password = None
+Account = None
 cur = backend.cursor
+
 def user_login_reg(message):
     global login
     login = message.text.strip() # deleting spacing
     bot.send_message(message.chat.id, 'Введите <b>Пароль</b>:', parse_mode='html')
     bot.register_next_step_handler(message, user_password_reg)
-# def user_password_reg(message):
-#     global password
-#     login = message.text.strip()
-#     cur.execute("INSERT INTO users (")
+
+def user_password_reg(message):
+    global password
+    password = message.text.strip() # deleting spacing
+    bot.send_message(message.chat.id, 'Введите <b>Логин</b>:', parse_mode='html')
+    bot.register_next_step_handler(message, user_password_reg)
+
+def user_password_reg(message):
+    global Account
+    Account = message.text.strip()
+    user = (login, password, Account)
+    bot.send_message(message.chat.id, 'Введите <b>Логин</b>:', parse_mode='html')
+    cur.execute("INSERT INTO users (login, password, Account) VALUES (?,?,?')", user)
 
 
 bot.infinity_polling()

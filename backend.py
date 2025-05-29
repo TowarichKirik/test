@@ -59,7 +59,7 @@ def Operations(num):
             pass
 
 
-
+    #что-то странное творится
     #Создание аккаунта
     def createAccount():
         login = input("Ваш логин: ")

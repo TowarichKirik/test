@@ -2,6 +2,7 @@ import telebot
 from dotenv import load_dotenv
 from telebot import types
 import os
+import main
 
 load_dotenv()
 bot = telebot.TeleBot(os.getenv('BOT_TOKEN')) # токен
@@ -21,12 +22,22 @@ def start_message(message):
 @bot.callback_query_handler(func= lambda call: True)
 def callback_register(call):
     if call.data == 'register':
-        bot.send_message(call.message.chat.id, '<b>Fake Bank</b>\n\n🔐 Регистрация:', parse_mode='html')
+        bot.send_message(call.message.chat.id, '<b>Fake Bank</b>\n\n🔐 Регистрация:\n\nВведите ваш <b>Логин</b> и <b>Пароль</b> в <b>разных</b> сообщениях', parse_mode='html')
+        bot.register_next_step_handler(call.message, user_login_reg)
     elif call.data == 'login':
-        bot.send_message(call.message.chat.id, '<b>Fake Bank</b>\n\n📝 Вход:', parse_mode='html')
-
-
-
+        bot.send_message(call.message.chat.id, '<b>Fake Bank</b>\n\n📝 Вход:\n\nВведите ваш <b>Логин</b> и <b>Пароль</b> в <b>разных</b> сообщениях', parse_mode='html')
+login = None
+password = None
+cur = main.cursor
+def user_login_reg(message):
+    global login
+    login = message.text.strip() # deleting spacing
+    bot.send_message(message.chat.id, 'Введите <b>Пароль</b>:', parse_mode='html')
+    bot.register_next_step_handler(message, user_password_reg)
+# def user_password_reg(message):
+#     global password
+#     login = message.text.strip()
+#     cur.execute("INSERT INTO users (")
 
 
 bot.infinity_polling()

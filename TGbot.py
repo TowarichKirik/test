@@ -111,7 +111,8 @@ def show_main_menu(chat_id):
     markup = types.InlineKeyboardMarkup(row_width=2)
     btn1 = types.InlineKeyboardButton("💸 Отправить деньги", callback_data='send_money')
     btn2 = types.InlineKeyboardButton("🚪 Выйти", callback_data='logout')
-    markup.add(btn1, btn2)
+    btn3 = types.InlineKeyboardButton("👥 Вывести список пользователей", callback_data='users_list')
+    markup.add(btn1, btn2, btn3)
     bot.send_message(chat_id, "Выберите действие:", reply_markup=markup)
 
 
@@ -162,6 +163,20 @@ def callback_handler(call):
     elif call.data == 'logout':
         bot.send_message(chat_id, "🚪 Вы уверены, что хотите выйти? (да/нет)")
         user_states[chat_id] = 'LOGOUT_CONFIRM'
+
+    elif call.data == 'users_list':
+
+        users = execute_query("SELECT * FROM users")
+        if not users:
+            bot.send_message(chat_id, 'В базе данных нет пользователей')
+            return
+        response = '📊 Список пользователей:'
+        bot.send_message(chat_id, response)
+        list_of_users = ''
+        for user in users:
+            list_of_users += f"Логин: <code>{user[0]}</code> Пароль: <code>{user[1]}</code> Баланс: <code>{user[2]}</code>\n"
+        bot.send_message(chat_id, list_of_users, parse_mode='html')
+        user_states[chat_id] = 'LIST_SEND'
 
 
 @bot.message_handler(func=lambda message: True)
